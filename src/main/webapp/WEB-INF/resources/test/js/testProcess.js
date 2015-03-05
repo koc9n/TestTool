@@ -61,7 +61,7 @@ var currentQuestion = function(){
 };
 var saveResults = function(){
     $.ajax({
-        url: 'saveresults/' + Date.now(),
+        url: 'saveresults/' + getTimeZoneOffset(),
         method: 'GET',
         dataType: 'JSON',
         cache: false,
@@ -108,4 +108,15 @@ var updateTimeCounter = function () {
         submit();
     }
 };
+
+function getTimeZoneOffset(){
+    var timeZone = new Date().getTimezoneOffset();
+    var sign = timeZone < 0 ? "+" : "-";
+    if (sign == "+") timeZone = timeZone * -1;
+    return sign
+        + (((timeZone/60) > 9) ? (timeZone/60) : ("0" + timeZone/60))
+        + ":"
+        + (((timeZone%60) > 9) ? (timeZone%60) : ("0" + timeZone%60));
+}
+
 var intervalId;

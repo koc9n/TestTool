@@ -13,14 +13,24 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
     <link rel="stylesheet" href="/resources/materialize/css/materialize.css" type="text/css" media="screen,projection"/>
+    <script src='/resources/jquery-1.11.2.js'></script>
+    <script src='/resources/jquery.tmpl.js'></script>
+    <script src="/resources/materialize/js/materialize.js"></script>
+    <script src="/resources/test/js/result.js"></script>
 </head>
 <body>
+<%@ page isELIgnored="true" %>
+<script id="resultTmpl" type="text/x-jquery-tmpl">
+<tr><td>${test.name}</td>
+<td>${score}</td>
+<td>${finishTime}</td></tr>
+</script>
+
 <nav class="light-green lighten-1" role="navigation">
     <div class="container">
         <div class="nav-wrapper">
             <a id="logo-container" href="/" class="brand-logo">Test System</a>
             <ul class="right">
-                <c:if test="${sessionData.user != null}">
                     <li>
                         <a href="/results">Results</a>
                     </li>
@@ -28,10 +38,8 @@
                     <li>
                         <a href="/logout">Logout</a>
                     </li>
-                </c:if>
             </ul>
             <ul id="nav-mobile" class="side-nav">
-                <c:if test="${sessionData.user != null}">
                     <li>
                         <a href="/results">Results</a>
                     </li>
@@ -39,7 +47,6 @@
                     <li>
                         <a href="/logout">Logout</a>
                     </li>
-                </c:if>
             </ul>
             <a href="#" data-activates="nav-mobile" class="button-collapse">
                 <i class="mdi-navigation-menu"></i>
@@ -50,13 +57,11 @@
 <div class="section">
     <div class="container">
         <div class="row">
-            <div class=" s12 m12">
+            <div class="col center-align s12 m12">
                 <div class="card">
                     <div class="card-content">
                         <div class="row">
-                            <blockquote>
-                                <p>${sessionData.user.name}, here you can see you results.</p>
-                            </blockquote>
+                                <p>Here you can see results of tests.</p>
                             <table>
                                 <thead>
                                 <tr>
@@ -71,6 +76,8 @@
                         </div>
                     </div>
                 </div>
+                <button class="btn waves-effect waves-light center" onclick="window.location='/'">Back to main page
+                </button>
             </div>
         </div>
     </div>
@@ -82,50 +89,7 @@
         </div>
     </div>
 </footer>
-<script src='/resources/jquery-1.11.2.js'></script>
-<script src="/resources/materialize/js/materialize.js"></script>
-<script>
 
-
-    // end of jQuery name space
-    $(document).ready(function () {
-        if ($(window).width() < 993) {
-            $('ul.right').hide();
-        } else {
-            $('ul.right').show();
-        }
-        $('select').material_select();
-        $('.button-collapse').sideNav();
-        getResults();
-    });
-    $(window).resize(function () {
-        if ($(window).width() < 993) {
-            $('ul.right').hide();
-        } else {
-            $('ul.right').show();
-        }
-    });
-
-    var getResults = function(){
-        $.ajax({
-            url: 'getresults',
-            method: 'GET',
-            dataType: 'JSON',
-            cache: false,
-            success: function (data) {
-                console.log(data);
-                $.each(data, function(index, value){
-                    $("#result").prepend("<tr><td>"+value.test.name+"</td>" +
-                    "<td>"+value.score+"</td><td>"+new Date(value.finishTime)+"</td></tr>");
-                });
-
-            },
-            error: function(err) {
-                console.log(err);
-            }
-        });
-    };
-</script>
 </body>
 
 </html>

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.time.*;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -54,18 +55,18 @@ public class TestController {
         return "redirect:/";
     }
 
-    @RequestMapping("/saveresults/{time}")
+    @RequestMapping("/saveresults/{zoneOffset}")
     public
     @ResponseBody
-    ResponseStatus saveResults(@PathVariable long time) {
+    ResponseStatus saveResults(@PathVariable String zoneOffset) {
         TestResult sessionTestResult = sessionData.getTestResult();
         if (sessionTestResult != null) {
-            testRepository.save(fillTestResultFromSession(sessionTestResult, sessionData.getUser(), time));
+            testRepository.save(fillTestResultFromSession(sessionTestResult, sessionData.getUser(), zoneOffset));
         }
         return ResponseStatus.SUCCESS;
     }
 
-    private com.gmail.mironchik.kos.web.model.TestResult fillTestResultFromSession(TestResult sessionTestResult, User sessionUser, long time) {
+    private com.gmail.mironchik.kos.web.model.TestResult fillTestResultFromSession(TestResult sessionTestResult, User sessionUser, String zoneOffset) {
         com.gmail.mironchik.kos.web.model.TestResult testResult = new com.gmail.mironchik.kos.web.model.TestResult();
         com.gmail.mironchik.kos.web.model.User user = new com.gmail.mironchik.kos.web.model.User();
         Test test = new Test();
@@ -73,7 +74,7 @@ public class TestController {
         user.setProfileId(sessionUser.getProfileId());
         testResult.setUser(user);
         testResult.setTest(test);
-        testResult.setFinishTime(time);
+        testResult.setFinishTime(LocalDateTime.now().atOffset(ZoneOffset.of(zoneOffset)).toLocalDateTime().toString());
         testResult.setScore(sessionTestResult.getScore());
         return testResult;
     }

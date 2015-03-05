@@ -1,9 +1,6 @@
 package com.gmail.mironchik.kos.web.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 /**
  * Created by koc9n on 04.03.15.
@@ -22,7 +19,7 @@ public class TestResult {
     @JoinColumn(name = "test_id")
     private Test test;
     private float score;
-    private long finishTime;
+    private String finishTime;
 
     public Long getId() {
         return id;
@@ -56,11 +53,11 @@ public class TestResult {
         this.score = score;
     }
 
-    public long getFinishTime() {
+    public String getFinishTime() {
         return finishTime;
     }
 
-    public void setFinishTime(long finishTime) {
+    public void setFinishTime(String finishTime) {
         this.finishTime = finishTime;
     }
 }
